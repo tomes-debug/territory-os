@@ -34,7 +34,7 @@
   .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 15px;cursor:pointer;transition:all .12s;box-shadow:0 1px 3px #0f1b2d08;position:relative}
   .card.sel{border-color:var(--blue);box-shadow:0 0 0 3px #1d6fe522}
-  .card.bdr{border-left:3px solid #6d28d9;background:#fdfbff}
+  .card.bdr{border-left:3px solid #dc2626;background:#fffbfb}
   .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
   .card-name{font-size:14px;font-weight:600;line-height:1.25}
   .card-score{font-size:15px;font-weight:700;font-family:'IBM Plex Mono',monospace}
@@ -80,7 +80,7 @@
   .weekdesc{font-size:12.5px;color:var(--muted)}
   .bcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px #0f1b2d08;max-width:720px}
   .bcard.focus{border-left:3px solid #6d28d9}
-  .bcard.bdr-on{border-color:#c9b6ee;border-left:3px solid #6d28d9;background:#fdfbff}
+  .bcard.bdr-on{border-color:#f3c2c2;border-left:3px solid #dc2626;background:#fffbfb}
   .bcard-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
   .bcard-name{font-size:14.5px;font-weight:600}
   .bcard p{margin:0;font-size:12.5px;line-height:1.55;color:var(--body)}
@@ -106,7 +106,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 function filtered(){return TERRITORY.filter(a=>(!state.q||a.name.toLowerCase().includes(state.q.toLowerCase()))&&(state.tier===0||a.tier===state.tier));}
 
 function cardHTML(a){const s=STATUS[a.status],t=TIER[a.tier],sel=state.selected&&state.selected.name===a.name,sig=a.signal?SIG[a.signal]:null,bdr=BDR_ACTIVE.has(a.name);
-  return `<div class="card${sel?' sel':''}${bdr?' bdr':''}" data-acct="${esc(a.name)}"><div class="card-top"><span class="card-name">${esc(a.name)}</span><span class="card-score" style="color:${t.c}">${a.adjusted}</span></div><div><span class="badge" style="color:${s.c};background:${s.bg};border:1px solid ${s.c}33">${s.label}</span>${bdr?`<span class="sig" style="color:#6d28d9;background:#f3ecfd;border:1px solid #6d28d944">● BDR · ${BDR_NAME.toUpperCase()}</span>`:""}${sig?`<span class="sig" style="color:${sig.c};background:${sig.bg};border:1px solid ${sig.c}44">${sig.label}</span>`:""}</div><div class="card-meta"><span>${a.revRange||"\u2014"}</span><span>\u00b7</span><span>${esc(a.state)}</span>${a.family>1?`<span>\u00b7</span><span style="color:#4f46e5">${a.family} divs</span>`:""}</div></div>`;}
+  return `<div class="card${sel?' sel':''}${bdr?' bdr':''}" data-acct="${esc(a.name)}"><div class="card-top"><span class="card-name">${esc(a.name)}</span><span class="card-score" style="color:${t.c}">${a.adjusted}</span></div><div><span class="badge" style="color:${s.c};background:${s.bg};border:1px solid ${s.c}33">${s.label}</span>${bdr?`<span class="sig" style="color:#fff;background:#dc2626;border:1px solid #dc2626">ACTIVE OUTREACH CADENCE</span>`:""}${sig?`<span class="sig" style="color:${sig.c};background:${sig.bg};border:1px solid ${sig.c}44">${sig.label}</span>`:""}</div><div class="card-meta"><span>${a.revRange||"\u2014"}</span><span>\u00b7</span><span>${esc(a.state)}</span>${a.family>1?`<span>\u00b7</span><span style="color:#4f46e5">${a.family} divs</span>`:""}</div></div>`;}
 
 function tierListHTML(){const f=filtered();let h="";[1,2,3,4].forEach(t=>{const items=f.filter(a=>a.tier===t);if(!items.length)return;h+=`<div class="tier"><div class="tier-head"><span class="tier-dot" style="background:${TIER[t].c}"></span><span class="tier-name">${TIER[t].name}</span><span class="tier-desc">${TIER[t].desc}</span></div><div class="cards">${items.map(cardHTML).join("")}</div></div>`;});return h||`<div class="empty">No accounts match.</div>`;}
 
@@ -115,7 +115,7 @@ function detailHTML(){const a=state.selected;if(!a)return `<div class="empty">Se
   const intelBlock=a.intelNote?`<div class="intel" style="background:${sig.bg};border-color:${sig.c}44"><div class="il" style="color:${sig.c}">${sig.label} \u00b7 Field Intel</div><p style="color:var(--ink)">${esc(a.intelNote)}</p></div>`:"";
   const adjNote=a.intelAdj?` \u00b7 base ${a.priority} ${a.intelAdj>0?'+':''}${a.intelAdj} intel`:"";
   const scores=WEIGHTS.map(w=>`<div class="scorerow"><span class="nm">${w.label}</span><div class="bar"><div class="bar-fill" style="width:${a.scores[w.key]/5*100}%"></div></div><span class="v">${a.scores[w.key]}</span></div>`).join("");
-  const bdr=a.bdrPlay?`<div class="bdrbox"><div class="bl">BDR Play \u00b7 ${BDR_NAME}${a.week?` \u00b7 Week ${a.week}`:""}${BDR_ACTIVE.has(a.name)?` \u00b7 <span style="color:#fff;background:#6d28d9;border-radius:4px;padding:1px 7px">WORKING NOW</span>`:""}</div><p>${esc(a.bdrPlay)}</p></div>`:"";
+  const bdr=a.bdrPlay?`<div class="bdrbox"><div class="bl">BDR Play \u00b7 ${BDR_NAME}${a.week?` \u00b7 Week ${a.week}`:""}${BDR_ACTIVE.has(a.name)?` \u00b7 <span style="color:#fff;background:#dc2626;border-radius:4px;padding:1px 7px">ACTIVE OUTREACH CADENCE</span>`:""}</div><p>${esc(a.bdrPlay)}</p></div>`:"";
   const pb=a.playbook.map((s,i)=>`<div class="pb-step"><span class="pb-num">${i+1}</span><span class="pb-text">${esc(s)}</span></div>`).join("");
   return `<h2 class="d-name">${esc(a.name)}</h2><div class="d-meta mono">RANK #${a.rank} \u00b7 SCORE ${a.adjusted}${adjNote} \u00b7 ${esc(a.subIndustry.toUpperCase())}</div>
   ${intelBlock}${bdr}
@@ -125,17 +125,17 @@ function detailHTML(){const a=state.selected;if(!a)return `<div class="empty">Se
   <div class="note"><strong>Live Slack + Notion research</strong> runs through CoLab's governed agent (pending IT), not this file. Nothing here touches company data.</div>`;}
 
 function boardHTML(){const hot=TERRITORY.filter(a=>a.signal==='HOT').length,intel=TERRITORY.filter(a=>a.signal).length,parked=TERRITORY.filter(a=>a.week===0).length,t1=TERRITORY.filter(a=>a.tier===1).length;
-  const stats=[["Accounts",TERRITORY.length,"var(--ink)"],["Act Now",hot,"#dc2626"],["BDR Active",BDR_ACTIVE.size,"#6d28d9"],["Tier 1",t1,"#4f46e5"],["Field Intel",intel,"var(--blue)"],["Parked",parked,"#7c8aa0"]].map(([l,v,c])=>`<div class="stat"><div class="n" style="color:${c}">${v}</div><div class="l">${l}</div></div>`).join("");
+  const stats=[["Accounts",TERRITORY.length,"var(--ink)"],["Act Now",hot,"#dc2626"],["Active Cadence",BDR_ACTIVE.size,"#dc2626"],["Tier 1",t1,"#4f46e5"],["Field Intel",intel,"var(--blue)"],["Parked",parked,"#7c8aa0"]].map(([l,v,c])=>`<div class="stat"><div class="n" style="color:${c}">${v}</div><div class="l">${l}</div></div>`).join("");
   const tbtns=[0,1,2,3,4].map(t=>`<button class="tierbtn${state.tier===t?' on':''}" data-tier="${t}" style="${state.tier===t?`background:${t===0?'var(--blue)':TIER[t].c};color:#fff`:''}">${t===0?"All":"T"+t}</button>`).join("");
   return `<div class="wrap"><div class="left"><div class="stats">${stats}</div><div class="controls"><input class="search" id="search" placeholder="Search accounts\u2026" value="${esc(state.q)}"><div style="display:flex;gap:8px">${tbtns}</div></div><div id="tierlist">${tierListHTML()}</div></div><div class="right" id="detail">${detailHTML()}</div></div>`;}
 
 function bdrHTML(){const activeNames=TERRITORY.filter(a=>BDR_ACTIVE.has(a.name)).map(a=>a.name);
   let h=`<div class="center"><h1 class="m-title">BDR Cadence \u00b7 Mohammad Makableh</h1><p class="m-intro">This is a strategic, account-based motion \u2014 not a volume blast. Mohammad works ~5 accounts a week, research-first: map the engineering org, find the right person, and hand Tomi one sharp, account-specific touch. Quality over quantity. Parked accounts are deliberately off the list until a trigger appears.</p>
-  <div class="twolayer" style="border-left-color:#6d28d9"><div class="h" style="color:#6d28d9">Currently being worked</div><p>Mohammad is actively working <strong>${activeNames.map(esc).join(", ")}</strong> right now \u2014 these are flagged <span class="sig" style="color:#6d28d9;background:#f3ecfd;border:1px solid #6d28d944">\u25cf BDR \u00b7 ${BDR_NAME.toUpperCase()}</span> across the board.</p></div>`;
+  <div class="twolayer" style="border-left-color:#dc2626"><div class="h" style="color:#dc2626">Currently being worked</div><p>Mohammad is actively working <strong>${activeNames.map(esc).join(", ")}</strong> right now \u2014 these are flagged <span class="sig" style="color:#fff;background:#dc2626;border:1px solid #dc2626">ACTIVE OUTREACH CADENCE</span> across the board.</p></div>`;
   for(let w=1;w<=5;w++){const items=TERRITORY.filter(a=>a.week===w);if(!items.length)continue;
     h+=`<div class="weekhead"><span class="weekpill${w===1?' now':''}">${w===1?'THIS WEEK':'WEEK '+w}</span><span class="weekdesc">${WEEKDESC[w]} \u00b7 ${items.length} accounts</span></div>`;
     items.forEach(a=>{const sig=a.signal?SIG[a.signal]:null,bdr=BDR_ACTIVE.has(a.name);
-      h+=`<div class="bcard${w===1?' focus':''}${bdr?' bdr-on':''}"><div class="bcard-top"><span class="bcard-name">${esc(a.name)}</span>${bdr?`<span class="sig" style="color:#fff;background:#6d28d9;border:1px solid #6d28d9">\u25cf WORKING NOW</span>`:""}${sig?`<span class="sig" style="color:${sig.c};background:${sig.bg};border:1px solid ${sig.c}44">${sig.label}</span>`:""}<span class="mono" style="margin-left:auto;font-size:11px;color:var(--muted)">${a.revRange||""} \u00b7 ${esc(a.state)}</span></div><p>${esc(a.bdrPlay||"")}</p></div>`;});
+      h+=`<div class="bcard${w===1?' focus':''}${bdr?' bdr-on':''}"><div class="bcard-top"><span class="bcard-name">${esc(a.name)}</span>${bdr?`<span class="sig" style="color:#fff;background:#dc2626;border:1px solid #dc2626">ACTIVE OUTREACH CADENCE</span>`:""}${sig?`<span class="sig" style="color:${sig.c};background:${sig.bg};border:1px solid ${sig.c}44">${sig.label}</span>`:""}<span class="mono" style="margin-left:auto;font-size:11px;color:var(--muted)">${a.revRange||""} \u00b7 ${esc(a.state)}</span></div><p>${esc(a.bdrPlay||"")}</p></div>`;});
   }
   const parked=TERRITORY.filter(a=>a.week===0);
   if(parked.length){h+=`<div class="weekhead"><span class="weekpill" style="background:#7c8aa0">PARKED</span><span class="weekdesc">Do not work now \u2014 revisit on trigger</span></div>`;
